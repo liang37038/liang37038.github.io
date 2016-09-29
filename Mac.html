@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
-  
-  
+    
+  Mac - 
   
   </title>
   
@@ -168,138 +168,6 @@
                     <span>posted in&nbsp;</span> 
           				  
           					    <span class="posted-in"><a href='Mac.html'>Mac</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14731727783157.html">
-                
-                  <h1>日常Git使用</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<h2 id="toc_0">解决 git pull 冲突</h2>
-
-<ul>
-<li>冲突了某文件（或者文件夹）</li>
-</ul>
-
-<pre><code>#用Head的文件去覆盖自己的文件
-git checkout --theirs file1 file2 ... 
-#覆盖文件夹
-git checkout --theirs dir1/. dir2/.
-</code></pre>
-
-<pre><code>#使用自己的文件
-git checkout --ours file1 file2 ...
-#覆盖文件夹
-git checkout --ours dir1/. dir2/.
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2016/9/6</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='command-line.html'>CLI</a></span>
-          				   
-                  </div>
-                  <div class="more-right right">
-                  <span class="comments">
-                      
-
-                       
-                  </span>
-                  </div>
-                </div>
-              </div><!-- article -->
-        
-			<div class="article">
-                <a class="clearlink" href="14721697867255.html">
-                
-                  <h1>Archive with CLI</h1>
-                  <div class="a-content">
-                      
-                      <div class="a-content-text">
-                        
-                        	<blockquote>
-<p>使用几种方式去对项目进行打包操作</p>
-</blockquote>
-
-<h3 id="toc_0">使用shenzhen</h3>
-
-<h4 id="toc_1">先clean并且根据PP文件（这里是Ad Hoc）打包</h4>
-
-<pre><code># -w workspace位置名称
-# -s schema名称
-# -c config名称
-ipa build -w &quot;qingxun.xcworkspace&quot; -s &quot;qingxun&quot; -c &quot;Ad Hoc&quot; --clean
-# 上传到itunesConnect
-ipa distribute:itunesconnect -a dev@tupu.im -p Tupu12345 -i 915233164 --upload
-</code></pre>
-
-<h4 id="toc_2">打包Demo（clean - 打包 - 上传到蒲公英）</h4>
-
-<pre><code>#!/bin/sh
-
-ipa build -w &quot;liangce.xcworkspace&quot; -s &quot;liangce&quot; -c &quot;Ad Hoc&quot; --clean
-
-unzip liangce.app.dSYM.zip
-leancloud upload_symbol -v \
--f &quot;./liangce.app.dSYM&quot; \
--i &quot;AsXGHqesNo0paA0qQdW0anXt-gzGzoHsz&quot; \
--k &quot;6NBEasX2Rl0487o7Lmolxtzq&quot;
-
-rm -rf liangce.app.dSYM
-ipa distribute:pgyer -u 6f96c00c6382e5109c539246bea00e38 -a b80c23ea536df7224b2d71eb6c1df022
-rm -rf liangce.ipa
-rm -rf liangce.app.dSYM.zip
-</code></pre>
-
-<h4 id="toc_3">使用XcodeBuild 命令打包</h4>
-
-<pre><code>#!/bin/sh
-project=qingxun  #Project name
-configuration=Ad\ Hoc   #Build configuration
-xcodebuild clean -workspace $project.xcworkspace -scheme $project
-xcodebuild archive -workspace $project.xcworkspace -scheme $project -configuration $configuration -archivePath $project.xcarchive
-xcodebuild -exportArchive -archivePath $project.xcarchive -exportPath $project -exportFormat ipa
-</code></pre>
-
-<h4 id="toc_4">使用Gym打包</h4>
-
-<pre><code>#!/bin/sh
-project=qingxun
-gym --workspace &quot;$project.xcworkspace&quot; --scheme &quot;$project&quot; --clean --use_legacy_build_api
-rm -rf $project.app.dSYM.zip
-</code></pre>
-
-                        
-                      </div>
-                  </div>
-                </a>
-                <div class="read-more clearfix">
-                  <div class="more-left left">
-                  
-                    <span class="date">2016/8/26</span>
-                    <span>posted in&nbsp;</span> 
-          				  
-          					    <span class="posted-in"><a href='command-line.html'>CLI</a></span>
           				   
                   </div>
                   <div class="more-right right">

@@ -77,6 +77,8 @@
 
         
             <li><a href="command-line.html">CLI</a></li>
+        
+            <li><a href="Mac.html">Mac</a></li>
          
 
       </ul>
@@ -98,6 +100,135 @@
 	<div class="large-8 medium-8 columns">
 		<div class="markdown-body home-categories">
 		
+			<div class="article">
+                <a class="clearlink" href="14751257918476.html">
+                
+                  <h1>我的Mac常用开发APP</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h4 id="toc_0">Git</h4>
+
+<ul>
+<li><strong>SourceTree</strong> 脱离命令行用git的最佳途径</li>
+<li><strong>iterm2</strong> 可以代替自带终端的神器，字体高亮，各种DIY没问题</li>
+<li><strong>tig</strong> 一个命令行插件，可以在命令行看到git的 commit log</li>
+</ul>
+
+<h4 id="toc_1">网络请求</h4>
+
+<ul>
+<li><strong>Postman</strong> 用来模拟请求，自带的Pre-request Script可以用来请求前写一些脚本（md5参数什么的），还能跑测试，非常强大，有chrome插件版和客户端（其实就是封装了个插件进客户端）</li>
+<li><strong>PAW</strong> 也是用来模拟请求的，界面更加符合mac设计，<strong>收费</strong></li>
+<li><strong>Surge</strong> 大部分用来科学上网，但是实际上也能够捉包测速！非常有用！以前如果买过iOS版的直接附送一份mac版 <strong>收费</strong></li>
+<li><strong>花瓶</strong> 经典的捉包工具，<strong>收费</strong></li>
+</ul>
+
+<h4 id="toc_2">编程</h4>
+
+<ul>
+<li><strong>Sublime Text</strong> 编写代码通用神器，这个不用说了，不过平时用来临时看看代码和写些小脚本用</li>
+<li><strong>Xcode</strong> 好多bug但是又不能不用的</li>
+<li><strong>atom</strong> 用这个来写react-native程序，插件也很丰富</li>
+<li><strong>mweb</strong> 我用这个来写这篇文章的，能够一键发布blog，很好用，<strong>收费</strong></li>
+<li><strong>MacDown</strong> 比较轻量的用来写markdown的软件，不过有了mweb就可以代替这个了</li>
+<li><strong>Linguan</strong> 可以同时处理中英文的国际化文件，不需要像Xcode那样切换两个文件来处理 <strong>收费</strong></li>
+</ul>
+
+<h4 id="toc_3">图像</h4>
+
+<ul>
+<li><strong>Photoshop CC</strong> 搞设计图的</li>
+<li><strong>cutterman</strong> ps的插件，如果设计师懒的话，开发的通过这个插件来从psd中抠图（很好地支持iOS和Android）</li>
+<li><strong>Sketch</strong> 这个完全可以代替Photoshop，不过这个世界上实际太多人用Photoshop了，需要走很长的路，性能和界面完秒Photoshop，对应社区也有很丰富的插件和生态，未来的趋势</li>
+<li><strong>Pixel Winch</strong> 可以测量设计图间距，支持自动测距，有些误差，不过也算比较高效率了，<strong>收费</strong>，而且真特么贵</li>
+<li><strong>Gapplin</strong> 可以打开和导出SVG格式的图片</li>
+<li><strong>ImageAlpha</strong> 用来压缩PNG，可以自定义压缩率，效果不错，不过一次只会处理一张</li>
+<li><strong>TinyPNG</strong> WEB版的压缩PNG工具，可以一次上传多张图片，效率高，但是不能够自定义压缩率</li>
+<li><strong>Prepo</strong> 提供一个1024*1024的jpg就可以压缩所有设备所需要的icon了</li>
+</ul>
+
+<h4 id="toc_4">iOS发版本相关</h4>
+
+<ul>
+<li><strong>iPhone配置使用工具</strong> 可以很方便地处理所有provision file，而不需要在Xcode搞，不过据说Xcode8也优化了provision的引用方式</li>
+<li><strong>Apple Configuration</strong> 开发者可以方便将ipa安装到设备上面，而不需要通过iTunes来同步之类的</li>
+<li><strong>Application Loader</strong> 上传app到AppStore，比Xcode的成功率高一些</li>
+</ul>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/9/29</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Mac.html'>Mac</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14731727783157.html">
+                
+                  <h1>日常Git使用</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h2 id="toc_0">解决 git pull 冲突</h2>
+
+<ul>
+<li>冲突了某文件（或者文件夹）</li>
+</ul>
+
+<pre><code>#用Head的文件去覆盖自己的文件
+git checkout --theirs file1 file2 ... 
+#覆盖文件夹
+git checkout --theirs dir1/. dir2/.
+</code></pre>
+
+<pre><code>#使用自己的文件
+git checkout --ours file1 file2 ...
+#覆盖文件夹
+git checkout --ours dir1/. dir2/.
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/9/6</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='command-line.html'>CLI</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
 			<div class="article">
                 <a class="clearlink" href="14721697867255.html">
                 
@@ -234,6 +365,8 @@ rm -rf $project.app.dSYM.zip
       	<p class="cat-list">
         
             <a href="command-line.html"><strong>CLI</strong></a>
+        
+            <a href="Mac.html"><strong>Mac</strong></a>
          
         </p>
 
@@ -248,6 +381,18 @@ rm -rf $project.app.dSYM.zip
                 <div class="side-content">
                 <ul class="posts-list">
 	      
+		      
+			      <li class="post">
+			        <a href="14751257918476.html">我的Mac常用开发APP</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="14731727783157.html">日常Git使用</a>
+			      </li>
+		     
+		  
 		      
 			      <li class="post">
 			        <a href="14721697867255.html">Archive with CLI</a>
