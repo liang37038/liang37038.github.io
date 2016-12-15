@@ -105,30 +105,36 @@
 			<div class="article">
                 <a class="clearlink" href="14806589603230.html">
                 
-                  <h1>使用 symbolicatecrash 解析 crash log</h1>
+                  <h1>symbolicatecrash那些事</h1>
                   <div class="a-content">
                       
                       <div class="a-content-text">
                         
-                        	<h3 id="toc_0">1、获取symbolicatecrash</h3>
+                        	<blockquote>
+<p>前阵子提交到App Store的app被拒绝上架，说是crash on launch，当时立刻就懵逼了，明明自测的时候所有机型系统都通过测试的，至少不会启动就crash，幸好Apple审核人员附带了crashxxx.txt（也就是crash log），带着疑问开始人生中第一次解析CrashLog旅程</p>
+</blockquote>
+
+<hr/>
+
+<p>要解析Crash Log可以有三种方式：<br/>
+* 使用 <strong>symbolicatecrash</strong> 解析<br/>
+* 使用 <strong>atos</strong> 解析<br/>
+* 使用 <strong>Xcode</strong> 解析</p>
+
+<h2 id="toc_0">使用 <em>symbolicatecrash</em> 解析</h2>
+
+<p>Xcode8 以后通过以下位置获取</p>
 
 <pre><code> 用户名/Applications/Xcode.app/Contents/SharedFrameworks/DVTFoundation.framework/Resources/symbolicatecrash
 </code></pre>
 
-<h3 id="toc_1">2、获取xxx.dSYMs、xxx.app</h3>
+<p>Xcode8 之前通过以下位置获取</p>
 
-<ul>
-<li>打开<strong>Xcode -&gt; Window -&gt; Organizer</strong>
-<img src="http://ww4.sinaimg.cn/large/7853084cgw1faia3odlynj20lw07amya.jpg" alt=""/></li>
-<li><strong>xxx.dSYMs</strong>在dSYMs目录下</li>
-<li><strong>xxx.app</strong>在Products/Applications目录下</li>
-</ul>
+<pre><code> 用户名/Applications/Xcode.app/Contents/SharedFrameworks/DVTFoundation.framework/Resources/symbolicatecrash
+</code></pre>
 
-<h3 id="toc_2">3、将以上的三样东西、加上Apple反馈的CrashLog也统一放到一个目录下</h3>
-
-<p><img src="http://ww1.sinaimg.cn/large/7853084cgw1faia98v6w7j20oi06k0tc.jpg" alt=""/></p>
-
-<p><strong>待续未完</strong></p>
+<p>将 <strong>xxx.dSYMs</strong>、<strong>xxx.app</strong> 、 <strong>symbolicatecrash</strong> 、还有Apple审核人员提供的<strong>Crash Log文件</strong>（可能是xxx.txt格式)放在一个文件夹里面，就好像这样<br/>
+<img src="http://ww1.sinaimg.cn/large/7853084cgw1faia98v6w7j20oi06k0tc.jpg" alt=""/></p>
 
                         
                       </div>
@@ -624,7 +630,7 @@ rm -rf $project.app.dSYM.zip
 	      
 		      
 			      <li class="post">
-			        <a href="14806589603230.html">使用 symbolicatecrash 解析 crash log</a>
+			        <a href="14806589603230.html">symbolicatecrash那些事</a>
 			      </li>
 		     
 		  
