@@ -124,12 +124,9 @@
 
       <div class="article-content">
       <blockquote>
-<p>前阵子提交到App Store的app被拒绝上架，说是</p>
-
-<p>crash on launch，当时立刻就懵逼了，明明自测的时候所有机型系统都通过测试的，至少不会启动就crash，幸好Apple审核人员附带了crashxxx.txt（也就是crash log），带着疑问开始人生中第一次解析CrashLog旅程</p>
+<p>前阵子提交到App Store的app被拒绝上架，说是<br/>
+crash on launch，当时立刻就懵逼了，明明自测的时候所有机型系统都通过测试的，至少不会启动就crash，幸好Apple审核人员附带了crashxxx.txt（也就是crash log），带着疑问开始人生中第一次解析CrashLog旅程</p>
 </blockquote>
-
-<hr/>
 
 <h4 id="toc_0">要解析Crash Log可以有三种方式：</h4>
 
@@ -139,7 +136,15 @@
 <li>使用 <strong>Xcode</strong> 解析</li>
 </ul>
 
+<p>以下重点描述symbolicatecrash的解析步骤</p>
+
 <h2 id="toc_1">使用 <em>symbolicatecrash</em> 解析</h2>
+
+<h3 id="toc_2">1.获取symbolicatecrash</h3>
+
+<blockquote>
+<p>需要注意的是不同版本的Xcode获取方式也不一样</p>
+</blockquote>
 
 <p>Xcode8 以后通过以下位置获取</p>
 
@@ -151,8 +156,42 @@
 <pre><code> 用户名/Applications/Xcode.app/Contents/SharedFrameworks/DVTFoundation.framework/Resources/symbolicatecrash
 </code></pre>
 
-<p>将 <strong>xxx.dSYMs</strong>、<strong>xxx.app</strong> 、 <strong>symbolicatecrash</strong> 、还有Apple审核人员提供的<strong>Crash Log文件</strong>（可能是xxx.txt格式)放在一个文件夹里面，就好像这样<br/>
+<h3 id="toc_3">2.获取xxx.app.dSYM</h3>
+
+<ul>
+<li>打开Xcode </li>
+<li>顶部菜单栏逐一打开 Window -&gt; Organizer -&gt; 对着需要的项目右键<strong>Show in Finder</strong></li>
+<li>向对应的xxx.xcarchive 右键<strong>显示包内容</strong></li>
+<li>xxx.app.dSYM就在dSYMs文件夹下</li>
+</ul>
+
+<blockquote>
+<p>如果这时候发现dSYMs文件夹下是空的，请注意 <strong>Build Settings</strong> 下的 <strong>Debug Information Format</strong> 是否选择了 <strong>DWARF with dSYM File</strong></p>
+</blockquote>
+
+<h3 id="toc_4">3.获取xxx.app</h3>
+
+<p>在步骤2的 <strong>显示包内容</strong> 文件夹下，打开 Products／Applications，则找到对应的xxx.app</p>
+
+<h3 id="toc_5">4.整理并且解析</h3>
+
+<p>然后将 <strong>xxx.dSYMs</strong>、<strong>xxx.app</strong> 、 <strong>symbolicatecrash</strong> 、还有Apple审核人员提供的<strong>Crash Log文件</strong>（可能是xxx.txt格式)放在一个文件夹里面，就好像这样<br/>
 <img src="http://ww1.sinaimg.cn/large/7853084cgw1faia98v6w7j20oi06k0tc.jpg" alt=""/></p>
+
+<p>打开命令行，输入 <code>./symbolicatecrash /Users/本机用户名/Desktop/crash/xxx.crash / Users/本机用户名/Desktop/crash/xxx.app.dSYM &gt; new_symbol.crash</code></p>
+
+<p>如果成功的情况下，当前目录会出现一个new_symbol.crash文件，用vim之类的打开后，会发现之前的内存地址会变成对应真实代码位置。</p>
+
+<h3 id="toc_6">如果出现ERROR</h3>
+
+<h4 id="toc_7">如果这时候显示 Error: &quot;DEVELOPER_DIR&quot; is not defined at ./symbolicatecrash line 60</h4>
+
+<p>则需要再输入 <code>export DEVELOPER_DIR=&quot;/Applications/Xcode.app/Contents/Developer&quot;</code><br/>
+然后再输入上面步骤4的解析命令</p>
+
+<h4 id="toc_8">如果这时候仍然解析不成功</h4>
+
+<p>你则需要检查，系统的spotlight检索功能是否被关闭了！（之前我一直解析不成功纠结了很久很久，最后发现是这个原因！）</p>
 
 
     
