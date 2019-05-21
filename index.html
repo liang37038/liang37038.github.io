@@ -1,0 +1,1089 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+  
+  
+  
+  </title>
+  
+  
+  <link href="atom.xml" rel="alternate" title="" type="application/atom+xml">
+    <link rel="stylesheet" href="asset/css/foundation.min.css" />
+    <link rel="stylesheet" href="asset/css/docs.css" />
+    <script src="asset/js/vendor/modernizr.js"></script>
+    <script src="asset/js/vendor/jquery.js"></script>
+  <script src="asset/highlightjs/highlight.pack.js"></script>
+  <link href="asset/highlightjs/styles/github.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script>hljs.initHighlightingOnLoad();</script>
+<script type="text/javascript">
+  function before_search(){
+    var searchVal = 'site: ' + document.getElementById('search_input').value;
+    document.getElementById('search_q').value = searchVal;
+    return true;
+  }
+</script>
+  </head>
+  <body class="antialiased hide-extras">
+    
+    <div class="marketing off-canvas-wrap" data-offcanvas>
+      <div class="inner-wrap">
+
+
+<nav class="top-bar docs-bar hide-for-small" data-topbar>
+
+
+  <section class="top-bar-section">
+  <div class="row">
+      <div style="position: relative;width:100%;"><div style="position: absolute; width:100%;">
+        <ul id="main-menu" class="left">
+        
+        <li id=""><a target="self" href="index.html">Home</a></li>
+        
+        <li id=""><a target="_self" href="archives.html">Archives</a></li>
+        
+        </ul>
+
+        <ul class="right" id="search-wrap">
+          <li>
+<form target="_blank" onsubmit="return before_search();" action="http://google.com/search" method="get">
+    <input type="hidden" id="search_q" name="q" value="" />
+    <input tabindex="1" type="search" id="search_input"  placeholder="Search"/>
+</form>
+</li>
+          </ul>
+      </div></div>
+  </div>
+  </section>
+
+</nav>
+
+        <nav class="tab-bar show-for-small">
+  <a href="javascript:void(0)" class="left-off-canvas-toggle menu-icon">
+    <span> &nbsp; </span>
+  </a>
+</nav>
+
+<aside class="left-off-canvas-menu">
+      <ul class="off-canvas-list">
+        
+        <li><a target="self" href="index.html">Home</a></li>
+        
+        <li><a target="_self" href="archives.html">Archives</a></li>
+        
+
+    <li><label>Categories</label></li>
+
+        
+            <li><a href="command-line.html">CLI</a></li>
+        
+            <li><a href="Mac.html">Mac</a></li>
+        
+            <li><a href="%E7%BC%96%E7%A8%8B.html">编程</a></li>
+        
+            <li><a href="%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html">源码分析</a></li>
+         
+
+      </ul>
+    </aside>
+
+<a class="exit-off-canvas" href="#"></a>
+
+
+        <section id="main-content" role="main" class="scroll-container">
+        
+       
+
+ <script type="text/javascript">
+	$(function(){
+		$('#menu_item_index').addClass('is_active');
+	});
+</script>
+<div class="row">
+	<div class="large-8 medium-8 columns">
+		<div class="markdown-body home-categories">
+		
+			<div class="article">
+                <a class="clearlink" href="15584091469065.html">
+                
+                  <h1>YYCache 源码解析</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>LRU 缓存淘汰算法</p>
+
+<pre class="line-numbers"><code class="language-objectivec">/**
+ A node in linked map.
+ Typically, you should not use this class directly.
+ */
+@interface _YYLinkedMapNode : NSObject {
+    @package
+    __unsafe_unretained _YYLinkedMapNode *_prev; // retained by dic
+    __unsafe_unretained _YYLinkedMapNode *_next; // retained by dic
+    id _key;
+    id _value;
+    NSUInteger _cost;
+    NSTimeInterval _time;
+}
+@end
+
+@interface _YYLinkedMap : NSObject {
+    @package
+    CFMutableDictionaryRef _dic; // do not set object directly
+    NSUInteger _totalCost;
+    NSUInteger _totalCount;
+    _YYLinkedMapNode *_head; // MRU, do not change it directly
+    _YYLinkedMapNode *_tail; // LRU, do not change it directly
+    BOOL _releaseOnMainThread;
+    BOOL _releaseAsynchronously;
+}
+</code></pre>
+
+<ul>
+<li>双向链表 + 散列容器来实现LRU</li>
+<li>cache中的键值对对应的是一个node</li>
+<li>使用<code>__unsafe_unretained</code>而不用<code>__weak</code>的原因是使用后者会调用<code>objc_loadWeak()</code>和<code>objc_storeWeak()</code>方法而导致效率低下。而使用<code>__unsafe_unretained</code>修饰的对象在对象释放的时候不会设为空指针，会变成野指针，但作者解决了这个问题</li>
+<li>_cost 和 _time 代表了这个节点的空间大小和最后访问的时间</li>
+</ul>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2019/5/21</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html'>源码分析</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15583607461249.html">
+                
+                  <h1>SDWebImage 缓存策略</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>常用的下载图片的API是下面这个</p>
+
+<pre class="line-numbers"><code class="language-objectivec">- (nullable id &lt;SDWebImageOperation&gt;)loadImageWithURL:(nullable NSURL *)url
+                                              options:(SDWebImageOptions)options
+                                             progress:(nullable SDWebImageDownloaderProgressBlock)progressBlock
+                                            completed:(nullable SDInternalCompletionBlock)completedBlock;
+                                        
+</code></pre>
+
+<p>创建一个operation，这个operation包含一个cache用的operation，图片的缓存策略逻辑就在里面：</p>
+
+<pre class="line-numbers"><code class="language-objectivec">__block SDWebImageCombinedOperation *operation = [SDWebImageCombinedOperation new];
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2019/5/20</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html'>源码分析</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15579359202191.html">
+                
+                  <h1>Block的实质</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h4 id="toc_0">前言:</h4>
+
+<p><strong>OC 里面Block分三种</strong></p>
+
+<ul>
+<li>_NSConcreteGlobalBlock 全局的静态 block，不会访问任何外部变量。</li>
+<li>_NSConcreteStackBlock 保存在栈中的 block，当函数返回时会被销毁。</li>
+<li>_NSConcreteMallocBlock 保存在堆中的 block，当引用计数为 0 时会被销毁。</li>
+</ul>
+
+<h4 id="toc_1">例子分析</h4>
+
+<p>在main.m写一个最简单的demo来分析Block的实质是什么</p>
+
+<pre class="line-numbers"><code class="language-objectivec">//main.m
+int main(int argc, const char * argv[]) {
+    void (^blk)(void) = ^{printf(&quot;Block\n&quot;);};
+    blk();
+    return 0;
+}
+</code></pre>
+
+<p>通过clang命令，将这些oc代码转为runtime的c代码</p>
+
+<pre class="line-numbers"><code class="language-bash">clang -rewrite-objc main.m
+</code></pre>
+
+<hr/>
+
+<p>会得到几乎10w行的c代码，但关键要分析的代码在最后。</p>
+
+<pre class="line-numbers"><code class="language-c">struct __block_impl {
+  void *isa;
+  int Flags;
+  int Reserved;
+  void *FuncPtr;
+};
+
+struct __main_block_impl_0 {
+  struct __block_impl impl;
+  struct __main_block_desc_0* Desc;
+  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int flags=0) {
+    impl.isa = &amp;_NSConcreteStackBlock;
+    impl.Flags = flags;
+    impl.FuncPtr = fp;
+    Desc = desc;
+  }
+};
+static void __main_block_func_0(struct __main_block_impl_0 *__cself) {
+printf(&quot;Block\n&quot;);}
+
+static struct __main_block_desc_0 {
+  size_t reserved;
+  size_t Block_size;
+} __main_block_desc_0_DATA = { 0, sizeof(struct __main_block_impl_0)};
+int main(int argc, const char * argv[]) {
+    void (*blk)(void) = ((void (*)())&amp;__main_block_impl_0((void *)__main_block_func_0, &amp;__main_block_desc_0_DATA));
+    ((void (*)(__block_impl *))((__block_impl *)blk)-&gt;FuncPtr)((__block_impl *)blk);
+    return 0;
+}
+</code></pre>
+
+<p>以下开始逐个模块分析～</p>
+
+<p>先看main方法，其中的转换符号比较多，抽出重点来改写一下</p>
+
+<pre class="line-numbers"><code class="language-c">
+struct __main_block_impl_0 tmp = __main_block_impl_0(__main_block_func_0, &amp;__main_block_desc_0_DATA);
+
+struct __main_block_impl_0 *blk = &amp;tmp;
+
+</code></pre>
+
+<p><code>__main_block_impl_0</code>其实就是整个block的结构，这个类型如下</p>
+
+<pre class="line-numbers"><code class="language-text">struct __main_block_impl_0 {
+  struct __block_impl impl;
+  struct __main_block_desc_0* Desc;
+  __main_block_impl_0(void *fp, struct __main_block_desc_0 *desc, int flags=0) {
+    impl.isa = &amp;_NSConcreteStackBlock;
+    impl.Flags = flags;
+    impl.FuncPtr = fp;
+    Desc = desc;
+  }
+};
+
+</code></pre>
+
+<p>其中包含 <code>__block_impl</code> 结构体，这个结构体里面有isa和FuncPtr，前者表明Block属于对象，后者是指向Block实际执行函数的地址</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2019/5/15</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html'>源码分析</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15578437776432.html">
+                
+                  <h1>YYAsyncLayer 原理</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<blockquote>
+<p>一句话总结 YYAsyncLayer继承CALayer，在Runloop主线程空闲的时候通过后台线程异步将控件画出来</p>
+</blockquote>
+
+<p>YYAsyncLayer主要包含三个类： YYAsyncLayer、YYSentinel、YYTransaction</p>
+
+<h4 id="toc_0">YYTransaction</h4>
+
+<pre class="line-numbers"><code class="language-objectivec">@interface YYTransaction()
+@property (nonatomic, strong) id target;
+@property (nonatomic, assign) SEL selector;
+@end
+static NSMutableSet *transactionSet = nil;
+</code></pre>
+
+<p>这个类其实可以看作是一个任务,其中包含 target接收者，和selector方法选择子。然后通过注册一个Runloop观察者，在Runloop <strong>准备进入休眠</strong> 和 <strong>退出</strong>的时候处理 已经保存的任务Set。</p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2019/5/14</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html'>源码分析</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15573985403992.html">
+                
+                  <h1>Runtime原理</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h4 id="toc_0">objc_object</h4>
+
+<p>oc中所有对象都是结构体实现的，这个结构体是 <strong>objc_object</strong></p>
+
+<pre class="line-numbers"><code class="language-c">struct objc_object {
+    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;
+};
+</code></pre>
+
+<p>其中id类型是指向objc_object结构体的指针 <code>typedef struct objc_object *id;</code></p>
+
+<h4 id="toc_1">objc_class</h4>
+
+<p>objc_object 中的isa是Class类型的，其实是一个<strong>objc_class</strong>结构体的指针</p>
+
+<pre class="line-numbers"><code class="language-c">struct objc_class {
+    Class _Nonnull isa  OBJC_ISA_AVAILABILITY;
+
+#if !__OBJC2__
+    Class _Nullable super_class                              OBJC2_UNAVAILABLE;
+    const char * _Nonnull name                               OBJC2_UNAVAILABLE;
+    long version                                             OBJC2_UNAVAILABLE;
+    long info                                                OBJC2_UNAVAILABLE;
+    long instance_size                                       OBJC2_UNAVAILABLE;
+    struct objc_ivar_list * _Nullable ivars                  OBJC2_UNAVAILABLE;
+    struct objc_method_list * _Nullable * _Nullable methodLists                    OBJC2_UNAVAILABLE;
+    struct objc_cache * _Nonnull cache                       OBJC2_UNAVAILABLE;
+    struct objc_protocol_list * _Nullable protocols          OBJC2_UNAVAILABLE;
+#endif
+
+} OBJC2_UNAVAILABLE;
+</code></pre>
+
+<ul>
+<li>objc_object 中的 objc_class （isa）是这个类的类对象</li>
+<li>需要注意的是objc_class也有isa变量，证明Class类型也是一个对象。</li>
+<li>ivars是指向<code>objc_ivar_list</code>结构体的指针，用于保存类的属性。</li>
+<li>methodLists是指向objc_method_list结构体指针的指针，所以可以通过Category动态增加方法。</li>
+<li>cache是存放方法缓存的objc_cache类型的结构体指针。</li>
+<li>一个实例对象通过class方法获取的Class就是它的isa指针指向的类对象，而类对象不是元类，类对象的isa指针指向的对象是元类。</li>
+</ul>
+
+<h4 id="toc_2">objc_selector</h4>
+
+<p>SEL是<code>objc_selector</code>结构体的指针: <code>typedef struct objc_selector *SEL;</code></p>
+
+<h4 id="toc_3">IMP</h4>
+
+<p>IMP 是函数的定义<code>typedef id _Nullable (*IMP)(id _Nonnull, SEL _Nonnull, ...);</code></p>
+
+<h4 id="toc_4">方法调用的整个过程</h4>
+
+<p><code>[obj test]</code> 实际执行代码是 <code>objc_msgSend(obj, @selector(test))</code>,然后通过selector的名字先从这个类的类对象isa中的缓存中寻找IMP，如果没有，则在methodLists根据SEL的名字寻找IMP，如果没有，就去super_class中 按上述的方式寻找 ... 一直找到NSObject，都没有，就会进行消息转发过程。</p>
+
+<h4 id="toc_5">消息转发</h4>
+
+<ul>
+<li>第一阶段：调用 <code>+ (BOOL)resolveInstaceMethod:(SEL)selector</code> 或者 <code>+ (BOOL)resolveClassMethod:(SEL)sel</code></li>
+<li>第二阶段：
+<ul>
+<li>调用 <code>-(id)forwardingTargetForSelector:(SEL)aSelector</code> 看是否有备用的接受者</li>
+<li>如果没有备用的接受者，则启用完整的消息转发机制，创建NSInvocation对象，这个对象包含方法的签名和参数还有目标，继而调用<code>- (void)forwardInvocation:(NSInvocation *)anInvocation</code>方法</li>
+</ul></li>
+</ul>
+
+<h4 id="toc_6">Q&amp;A</h4>
+
+<p><code>-(id)forwardingTargetForSelector:(SEL)aSelector</code> 和   <code>- (void)forwardInvocation:(NSInvocation *)anInvocation</code> 有什么区别？</p>
+
+<blockquote>
+<p>前者只能够处理一个备用`接受者，后者可以处理多个</p>
+</blockquote>
+
+<p>消息转发的例子？</p>
+
+<ul>
+<li>当 app 调用了没有实现的方法的时候，可以用这个来阻止app崩溃，还可以用弹窗提示用户</li>
+<li>通过Category增加方法。</li>
+<li>动态添加方法。调用performSelector，然后通过消息转发，调用resolveInstanceMethod方法。</li>
+<li>方法交换；有些会写在+load方法中，但建议写在initialize方法中，因为前者会在app启动的时候全部类的load方法都跑一次，如果太多，会拖慢启动速度；后者只有在类用到的时候才会调用。</li>
+</ul>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2019/5/9</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html'>源码分析</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="15568658770275.html">
+                
+                  <h1>Runloop 原理</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>与其相关的概念</p>
+
+<ul>
+<li>NSTimer</li>
+<li>UIEvent</li>
+<li>Autorelease</li>
+<li>NSDelayedPerforming、NSThreadPerformAddition</li>
+<li>CADisplayLink、CATransition、CAAnimation</li>
+</ul>
+
+<h4 id="toc_0">Autorelease在什么时候释放？</h4>
+
+<p>UIKit通过RunloopObserver在Runloop两次Sleep之间对AutoreleasePool进行Pop和Push，将这次Loop中产生的Autorelease对象释放</p>
+
+<h4 id="toc_1">runloop 和 线程有什么关系</h4>
+
+<h4 id="toc_2">崩溃的时候重启Runloop</h4>
+
+<pre class="line-numbers"><code class="language-objectivec">- (void)restartRunloop{
+    CFRunLoopRef runloop = CFRunLoopGetCurrent();
+    NSArray *allModes = CFBridgingRelease(CFRunLoopCopyAllModes(runloop));
+    while (1) {
+        for (NSString *mode in allModes){
+            CFRunLoopRunInMode((CFStringRef)mode, 0.001, false);
+        }
+    }
+}
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2019/5/3</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html'>源码分析</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14806589603230.html">
+                
+                  <h1>使用 symbolicatecrash 解析 crash log</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h3 id="toc_0">1、获取symbolicatecrash</h3>
+
+<pre class="line-numbers"><code class="language-text"> 用户名/Applications/Xcode.app/Contents/SharedFrameworks/DVTFoundation.framework/Resources/symbolicatecrash
+</code></pre>
+
+<h3 id="toc_1">2、获取xxx.dSYMs、xxx.app</h3>
+
+<ul>
+<li>打开<strong>Xcode -&gt; Window -&gt; Organizer</strong>
+<img src="http://ww4.sinaimg.cn/large/7853084cgw1faia3odlynj20lw07amya.jpg" alt=""/></li>
+<li><strong>xxx.dSYMs</strong>在dSYMs目录下</li>
+<li><strong>xxx.app</strong>在Products/Applications目录下</li>
+</ul>
+
+<h3 id="toc_2">3、将以上的三样东西、加上Apple反馈的CrashLog也统一放到一个目录下</h3>
+
+<p><img src="http://ww1.sinaimg.cn/large/7853084cgw1faia98v6w7j20oi06k0tc.jpg" alt=""/></p>
+
+<p><strong>待续未完</strong></p>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/12/2</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='%E7%BC%96%E7%A8%8B.html'>编程</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14806585865265.html">
+                
+                  <h1>解决AFNetworking传递二维数组失败的问题</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<p>之前在一个项目里面，需要通过POST方式传递一个二维数组的参数，却一直失败，翻查了很多资料，最后发现可以通过编辑源码的方式来解决问题，方法很简单：</p>
+
+<ul>
+<li>打开AFURLRequestSerialization.m文件</li>
+<li>找到AFQueryStringPairsFromKeyAndValue方法</li>
+<li>将中间一个else if语句中的内容改成以下代码</li>
+</ul>
+
+<p>原来：</p>
+
+<pre class="line-numbers"><code class="language-text">else if ([value isKindOfClass:[NSArray class]]) {
+        NSArray *array = value;
+        for (id nestedValue in array) {
+            [mutableQueryStringComponents addObjectsFromArray:AFQueryStringPairsFromKeyAndValue([NSString stringWithFormat:@&quot;%@[]&quot;, key], nestedValue)];
+        }
+    }
+</code></pre>
+
+<p>修改后：</p>
+
+<pre class="line-numbers"><code class="language-text">else if ([value isKindOfClass:[NSArray class]]) {
+        NSArray *array = value;
+        for (id nestedValue in array) {
+            NSInteger index = [array indexOfObject:nestedValue];
+            [mutableQueryStringComponents addObjectsFromArray:AFQueryStringPairsFromKeyAndValue([NSString stringWithFormat:@&quot;%@[%ld]&quot;, key, index], nestedValue)];
+        }
+    }
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/12/2</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='%E7%BC%96%E7%A8%8B.html'>编程</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14802404850688.html">
+                
+                  <h1>微信小程序笔记</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<hr/>
+
+<h3 id="toc_0">App生命周期</h3>
+
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>描述</th>
+</tr>
+</thead>
+
+<tbody>
+<tr>
+<td>onLaunch</td>
+<td>当小程序初始化完成时，会触发 onLaunch（全局只触发一次）</td>
+</tr>
+<tr>
+<td>onShow</td>
+<td>当小程序启动，或从后台进入前台显示，会触发 onShow</td>
+</tr>
+<tr>
+<td>onHide</td>
+<td>当小程序从前台进入后台，会触发 onHide</td>
+</tr>
+<tr>
+<td>其他</td>
+<td>开发者可以添加任意的函数或数据到 Object 参数中，用 this 可以访问</td>
+</tr>
+</tbody>
+</table>
+
+<pre class="line-numbers"><code class="language-text">App({
+  onLaunch: function() { 
+    // Do something initial when launch.
+  },
+  onShow: function() {
+      // Do something when show.
+  },
+  onHide: function() {
+      // Do something when hide.
+  },
+  globalData: &#39;I am global data&#39;
+})
+
+// 通过以下方法获取全局App对象
+var appInstance = getApp()
+console.log(appInstance.globalData) // I am global data
+</code></pre>
+
+<h3 id="toc_1">Page生命周期</h3>
+
+<pre class="line-numbers"><code class="language-text">//index.js
+Page({
+  data: {
+    text: &quot;This is page data.&quot;
+  },
+  onLoad: function(options) {
+    // Do some initialize when page load.
+  },
+  onReady: function() {
+    // Do something when page ready.
+  },
+  onShow: function() {
+    // Do something when page show.
+  },
+  onHide: function() {
+    // Do something when page hide.
+  },
+  onUnload: function() {
+    // Do something when page close.
+  },
+  onPullDownRefresh: function() {
+    // Do something when pull down.
+  },
+  onReachBottom: function() {
+    // Do something when page reach bottom.
+  },
+  // Event handler.
+  viewTap: function() {
+    this.setData({
+      text: &#39;Set some data for updating view.&#39;
+    })
+  },
+  customData: {
+    hi: &#39;MINA&#39;
+  }
+})
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/11/27</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='%E7%BC%96%E7%A8%8B.html'>编程</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14751257918476.html">
+                
+                  <h1>我的Mac常用开发APP</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<h4 id="toc_0">Git</h4>
+
+<ul>
+<li><strong>SourceTree</strong> 脱离命令行用git的最佳途径</li>
+<li><strong>iterm2</strong> 可以代替自带终端的神器，字体高亮，各种DIY没问题</li>
+<li><strong>tig</strong> 一个命令行插件，可以在命令行看到git的 commit log</li>
+</ul>
+
+<h4 id="toc_1">网络请求</h4>
+
+<ul>
+<li><strong>Postman</strong> 用来模拟请求，自带的Pre-request Script可以用来请求前写一些脚本（md5参数什么的），还能跑测试，非常强大，有chrome插件版和客户端（其实就是封装了个插件进客户端）</li>
+<li><strong>PAW</strong> 也是用来模拟请求的，界面更加符合mac设计，<strong>收费</strong></li>
+<li><strong>Surge</strong> 大部分用来科学上网，但是实际上也能够捉包测速！非常有用！以前如果买过iOS版的直接附送一份mac版 <strong>收费</strong></li>
+<li><strong>花瓶</strong> 经典的捉包工具，<strong>收费</strong></li>
+</ul>
+
+<h4 id="toc_2">编程</h4>
+
+<ul>
+<li><strong>Sublime Text</strong> 编写代码通用神器，这个不用说了，不过平时用来临时看看代码和写些小脚本用</li>
+<li><strong>Xcode</strong> 好多bug但是又不能不用的</li>
+<li><strong>atom</strong> 用这个来写react-native程序，插件也很丰富</li>
+<li><strong>mweb</strong> 我用这个来写这篇文章的，能够一键发布blog，很好用，<strong>收费</strong></li>
+<li><strong>MacDown</strong> 比较轻量的用来写markdown的软件，不过有了mweb就可以代替这个了</li>
+<li><strong>Linguan</strong> 可以同时处理中英文的国际化文件，不需要像Xcode那样切换两个文件来处理 <strong>收费</strong></li>
+</ul>
+
+<h4 id="toc_3">图像</h4>
+
+<ul>
+<li><strong>Photoshop CC</strong> 搞设计图的</li>
+<li><strong>cutterman</strong> ps的插件，如果设计师懒的话，开发的通过这个插件来从psd中抠图（很好地支持iOS和Android）</li>
+<li><strong>Sketch</strong> 这个完全可以代替Photoshop，不过这个世界上实际太多人用Photoshop了，需要走很长的路，性能和界面完秒Photoshop，对应社区也有很丰富的插件和生态，未来的趋势</li>
+<li><strong>Pixel Winch</strong> 可以测量设计图间距，支持自动测距，有些误差，不过也算比较高效率了，<strong>收费</strong>，而且真特么贵</li>
+<li><strong>Gapplin</strong> 可以打开和导出SVG格式的图片</li>
+<li><strong>ImageAlpha</strong> 用来压缩PNG，可以自定义压缩率，效果不错，不过一次只会处理一张</li>
+<li><strong>TinyPNG</strong> WEB版的压缩PNG工具，可以一次上传多张图片，效率高，但是不能够自定义压缩率</li>
+<li><strong>Prepo</strong> 提供一个1024*1024的jpg就可以压缩所有设备所需要的icon了</li>
+</ul>
+
+<h4 id="toc_4">iOS发版本相关</h4>
+
+<ul>
+<li><strong>iPhone配置使用工具</strong> 可以很方便地处理所有provision file，而不需要在Xcode搞，不过据说Xcode8也优化了provision的引用方式</li>
+<li><strong>Apple Configuration</strong> 开发者可以方便将ipa安装到设备上面，而不需要通过iTunes来同步之类的</li>
+<li><strong>Application Loader</strong> 上传app到AppStore，比Xcode的成功率高一些</li>
+</ul>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/9/29</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='Mac.html'>Mac</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+			<div class="article">
+                <a class="clearlink" href="14731727783157.html">
+                
+                  <h1>我的日常git命令</h1>
+                  <div class="a-content">
+                      
+                      <div class="a-content-text">
+                        
+                        	<pre class="line-numbers"><code class="language-text">git init
+git status
+git pull origin develop
+</code></pre>
+
+<h2 id="toc_0">解决 git pull 冲突</h2>
+
+<ul>
+<li>冲突了某文件（或者文件夹）</li>
+</ul>
+
+<pre class="line-numbers"><code class="language-text">#用Head的文件去覆盖自己的文件
+git checkout --theirs file1 file2 ... 
+#覆盖文件夹
+git checkout --theirs dir1/. dir2/.
+</code></pre>
+
+<pre class="line-numbers"><code class="language-text">#使用自己的文件
+git checkout --ours file1 file2 ...
+#覆盖文件夹
+git checkout --ours dir1/. dir2/.
+</code></pre>
+
+                        
+                      </div>
+                  </div>
+                </a>
+                <div class="read-more clearfix">
+                  <div class="more-left left">
+                  
+                    <span class="date">2016/9/6</span>
+                    <span>posted in&nbsp;</span> 
+          				  
+          					    <span class="posted-in"><a href='command-line.html'>CLI</a></span>
+          				   
+                  </div>
+                  <div class="more-right right">
+                  <span class="comments">
+                      
+
+                       
+                  </span>
+                  </div>
+                </div>
+              </div><!-- article -->
+        
+              
+
+
+			<div class="row">
+			  <div class="large-6 columns">
+			  <p class="text-left" style="padding-top:25px;">
+			   
+			  </p>
+			  </div>
+			  <div class="large-6 columns">
+			<p class="text-right" style="padding-top:25px;">
+			
+			</p>
+			  </div>
+			</div>
+		</div>
+	</div><!-- large 8 -->
+
+ <div class="large-4 medium-4 columns">
+  <div class="hide-for-small">
+    <div id="sidebar" class="sidebar">
+          <div id="site-info" class="site-info">
+            
+                <h1></h1>
+                <div class="site-des"></div>
+                <div class="social">
+
+
+
+
+
+
+
+
+
+
+
+  <a target="_blank" class="rss" href="atom.xml" title="RSS">RSS</a>
+                
+              	 </div>
+          	</div>
+
+             
+
+              <div id="site-categories" class="side-item ">
+                <div class="side-header">
+                  <h2>Categories</h2>
+                </div>
+                <div class="side-content">
+
+      	<p class="cat-list">
+        
+            <a href="command-line.html"><strong>CLI</strong></a>
+        
+            <a href="Mac.html"><strong>Mac</strong></a>
+        
+            <a href="%E7%BC%96%E7%A8%8B.html"><strong>编程</strong></a>
+        
+            <a href="%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90.html"><strong>源码分析</strong></a>
+         
+        </p>
+
+
+                </div>
+              </div>
+
+              <div id="site-categories" class="side-item">
+                <div class="side-header">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="side-content">
+                <ul class="posts-list">
+	      
+		      
+			      <li class="post">
+			        <a href="15584091469065.html">YYCache 源码解析</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15583607461249.html">SDWebImage 缓存策略</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15579359202191.html">Block的实质</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15578437776432.html">YYAsyncLayer 原理</a>
+			      </li>
+		     
+		  
+		      
+			      <li class="post">
+			        <a href="15573985403992.html">Runtime原理</a>
+			      </li>
+		     
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		  
+		      
+		   
+		  		</ul>
+                </div>
+              </div>
+        </div><!-- sidebar -->
+      </div><!-- hide for small -->
+</div><!-- large 4 -->
+
+</div><!-- row -->
+
+ <div class="page-bottom clearfix">
+  <div class="row">
+   <p class="copyright">Copyright &copy; 2015
+Powered by <a target="_blank" href="http://www.mweb.im">MWeb</a>,&nbsp; 
+Theme used <a target="_blank" href="http://github.com">GitHub CSS</a>.</p>
+  </div>
+</div>
+
+        </section>
+      </div>
+    </div>
+
+  
+    
+
+    <script src="asset/js/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+      function fixSidebarHeight(){
+        var w1 = $('.markdown-body').height();
+          var w2 = $('#sidebar').height();
+          if (w1 > w2) { $('#sidebar').height(w1); };
+      }
+      $(function(){
+        fixSidebarHeight();
+      })
+      $(window).load(function(){
+          fixSidebarHeight();
+      });
+     
+    </script>
+
+    
+
+
+
+  </body>
+</html>
